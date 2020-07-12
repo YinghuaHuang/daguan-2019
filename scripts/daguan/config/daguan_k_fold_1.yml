@@ -1,0 +1,43 @@
+model_dir: ckpt/daguan_k_fold/1
+
+params:
+  optimizer: AdamWeightDecayOptimizer
+  optimizer_params:
+    weight_decay_rate: 0.01
+    beta1: 0.9
+    beta2: 0.999
+  learning_rate: 0.1
+  param_init: 0.1
+  clip_gradients: 5.0
+  decay_type: noam_decay_v2
+  decay_params:
+    model_dim: 512
+    warmup_steps: 3000
+  init_transition_params: null
+
+data:
+  train_features_file: NERData/daguan_k_fold/1/train.txt
+  train_labels_file: NERData/daguan_k_fold/1/train.label
+  eval_features_file: NERData/daguan_k_fold/1/dev.txt
+  eval_labels_file: NERData/daguan_k_fold/1/dev.label
+  source_words_vocabulary: NERData/daguan_k_fold/1/vocab.txt
+  target_words_vocabulary: NERData/daguan_k_fold/1/label.voc
+  maximum_features_length: 256
+  maximum_labels_length: 256
+
+train:
+  batch_size: 32
+  bucket_width: 1
+  save_checkpoints_steps: 1000
+  save_summary_steps: 50
+  train_steps: 100000
+
+  # Consider setting this to -1 to match the number of training examples.
+  sample_buffer_size: 1000000
+
+eval:
+  eval_delay: 600  # Every 5 minutes.
+  save_eval_predictions: true
+
+infer:
+  batch_size: 30
